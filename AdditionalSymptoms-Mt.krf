@@ -1,0 +1,25 @@
+;;;	File name:	AdditionalSymptoms-Mt.krf
+;;;	System:		FIRE
+;;;	Author:		Don Baracskay
+;;;	Created:	February 23, 2022
+;;;	Purpose:	Take in various health states and output risk factor status for states
+;;; of being associated with heart disease.
+
+;;; Microtheory definition
+(in-microtheory AdditionalSymptoms-Mt)
+(isa AdditionalSymptoms-Mt Microtheory)
+(comment AdditionalSymptoms-Mt
+  "AdditionalSymptoms-Mt is for the definition of heart disease risk factors
+  that do not currently exist in the KB.")
+
+;;; Physical inactivity definition
+;;; Uses state of health predicate
+(isa physically-inactive BLOTypeByGenericHealthStatus)
+(comment physically-inactive
+  "The state of being generally inactive.")
+
+;;; Poor diet definition
+;;; Uses state of health predicate
+(isa has-poor-diet BLOTypeByGenericHealthStatus)
+(comment has-poor-diet
+  "The state of having a poor diet.")

@@ -1,0 +1,57 @@
+;;;	File name:	HeartAttackTest-Mt.krf
+;;;	System:		FIRE
+;;;	Author:		Don Baracskay
+;;;	Created:	March 1, 2022
+;;;	Purpose:	Upload some predicates for testing of HeartAttack system
+
+;;; Microtheory Definition
+(in-microtheory HeartAttackTest-Mt)
+(isa HeartAttackTest-Mt Microtheory)
+(genlMt HeartAttackTest-Mt HeartAttackRF-Mt)
+(comment HeartAttackTest-Mt
+ "HeartAttackTest-Mt microtheory is for testing the predicates and horn clauses existing in the other microtheories.")
+
+;;; 7 individuals that have a risk factor for having a heart attack
+(isa Chell Organism-Whole)
+(isa Isaac Organism-Whole)
+(isa Gordon Organism-Whole)
+(isa Cloud Organism-Whole)
+(isa Al Organism-Whole)
+(isa Dante Organism-Whole)
+(isa Carl-Gerhard-Busch Organism-Whole)
+
+;;; Test case for total risk factor counting for a person
+(isa Michael Organism-Whole)
+
+;;; Test Hypertension
+(systolicBloodPressure Chell (MM-Hg 140))
+
+;;; Test Dyslipidemia
+(cholesterolLevel Isaac 175)
+
+;;; Test Diabetes
+(a1cLevels Gordon 8.2)
+
+;;; Test Obesity
+(massOfObject Cloud (Kilogram 91))
+(heightOfObject Cloud (Meter 1.82))
+
+;;; Test Tobacco
+(doneBy TobaccoAbuse Al)
+
+;;; Test Physical inactivity
+(stateOfHealth Dante physically-inactive)
+
+;;; Test Poor diet
+(stateOfHealth Carl-Gerhard-Busch has-poor-diet)
+
+;;; Risk factor count
+;;; Answer should be 5 due to dyslipidemia, diabetes, tobacco abuse, being physically inactive, having a poor diet.
+(systolicBloodPressure Michael (MM-Hg 125))
+(cholesterolLevel Michael 190)
+(a1cLevels Michael 8.2)
+(massOfObject Michael (Kilogram 100))
+(heightOfObject Michael (Meter 1.85))
+(doneBy TobaccoAbuse Michael)
+(stateOfHealth Michael physically-inactive)
+(stateOfHealth Michael has-poor-diet)

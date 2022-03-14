@@ -1,0 +1,56 @@
+;;; File name: HeartAttackRF-Mt.krf
+;;;	System: 	FIRE
+;;;	Author: 	Don Baracskay
+;;;	Created:	February 23, 2022
+;;;	Purpose:	Determine if one has risk factors for heart diseaes, specifically
+;;; a heart attack, using Diagnostic-Mt and AdditionalSymptoms-Mt.
+
+;;; Microtheory Definition
+(in-microtheory HeartAttackRF-Mt)
+(isa HeartAttackRF-Mt Microtheory)
+(genlMt HeartAttackRF-Mt Diagnostic-Mt)
+(genlMt HeartAttackRF-Mt AdditionalSymptoms-Mt)
+(comment HeartAttackRF-Mt
+ "HeartAttackRF-Mt microtheory is used to take in patients' risk factor status and
+ determine if they are a risk for Heart Disease - specifically mycardial infarctions.")
+
+;;; Predicate Definition
+(isa heartRiskCnt Predicate)
+(arity heartRiskCnt 2)
+(arg1Isa heartRiskCnt Organism-Whole)
+(arg2Isa heartRiskCnt RationalNumber)
+
+;;;Horn Clause Definitions
+(<== (stateOfAilment ?person AtRisk HeartAttack)
+	(hasDisease ?person Hypertension))
+
+(<== (stateOfAilment ?person AtRisk HeartAttack)
+	(hasDisease ?person Dyslipidemia))
+
+(<== (stateOfAilment ?person AtRisk HeartAttack)
+	(hasDisease ?person DiabetesMellitus))
+
+(<== (stateOfAilment ?person AtRisk HeartAttack)
+	(stateOfHealth ?person physically-inactive))
+
+(<== (stateOfAilment ?person AtRisk HeartAttack)
+	(stateOfHealth ?person has-poor-diet))
+
+(<== (stateOfAilment ?person AtRisk HeartAttack)
+	(hasDisease ?person Obesity))
+
+(<== (stateOfAilment ?person AtRisk HeartAttack)
+	(doneBy TobaccoAbuse ?person))
+
+;;; Risk Factor Count
+(<== (heartRiskCnt ?person ?n)
+	(stateOfAilment ?person AtRisk HeartAttack)
+	(evaluate ?n
+  		(LengthOfListFn
+    			(SetToListFn
+      				(SetOfSetsUnionFn
+        				(TheSet
+	  (TheClosedRetrievalSetOf ?condition (ist-Information HeartAttackTest-Mt (hasDisease ?person ?condition)))
+          (TheClosedRetrievalSetOf ?behavior (ist-Information HeartAttackTest-Mt (doneBy ?behavior ?person)))
+	  (TheClosedRetrievalSetOf ?lifestyle (ist-Information HeartAttackTest-Mt (stateOfHealth ?person ?lifestyle)))
+))))))

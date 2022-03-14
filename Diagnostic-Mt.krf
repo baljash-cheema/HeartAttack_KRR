@@ -1,0 +1,54 @@
+;;;	File name:	Diagnostic-Mt.krf
+;;;	System:		FIRE
+;;;	Author:		Don Baracskay
+;;;	Created:	February 27, 2022
+;;;	Purpose:	Take in various measurements and output whether someone has a risk
+;;; factor for heart disease.
+
+;;; Microtheory Definition
+(in-microtheory Diagnostic-Mt)
+(isa Diagnostic-Mt Microtheory)
+(genlMt  Diagnostic-Mt HeartAttackRF-Mt)
+(comment Diagnostic-Mt
+ "Diagnostic-Mt microtheory is designed to consider health measures from a given
+ patient and help them understand if they have risk factors for heart disease.")
+
+
+;;; Risk Factor Definitions
+
+;;; Hypertension SBP > 130
+(<== (hasDisease ?person Hypertension)
+	(systolicBloodPressure ?person (MM-Hg ?BP))
+	(evaluate True (GreaterThan-UnitValuesFn ?BP 130))
+
+)
+
+;;; Dyslipidemia > 170 mg/dl OR 1.7 mg/ml
+(<== (hasDisease ?person Dyslipidemia)
+	(cholesterolLevel ?person ?CL)
+	(evaluate True (GreaterThan-UnitValuesFn ?CL 170))
+)
+
+;;; Diabetes A1C > 6.3% -> new predicate: a1cLevels
+
+(isa a1cLevels Predicate)
+(arity a1cLevels 2)
+(arg1Isa a1cLevels Organism-Whole)
+(arg2Isa a1cLevels RationalNumber)
+(comment a1cLevels
+ "a1cLevels is a relation between an organism and its level of the hemoglobin A1c in the blood.
+ A1C reflects an individuals blood glucose over several months.")
+
+(<== (hasDisease ?person DiabetesMellitus)
+	(a1cLevels ?person ?A1C)
+	(evaluate True (GreaterThan-UnitValuesFn ?A1C 6.3))
+)
+
+;;; Obesity BMI > 25 kg/m^2 (BMI = mass/h^2)
+;;; use heightOfObject and massOfObject
+(<== (hasDisease ?person Obesity)
+	(massOfObject ?person (Kilogram ?m))
+	(heightOfObject ?person (Meter ?h))
+	(evaluate ?BMI (QuotientFn ?m (TimesFn ?h ?h)))
+	(evaluate True (GreaterThan-UnitValuesFn ?BMI 25))
+)
